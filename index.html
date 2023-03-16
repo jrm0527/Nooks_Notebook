@@ -17,13 +17,8 @@
     />
     <script defer src="/javascripts/app.js"></script>
     <script
-      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
-      integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"
-      integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD"
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
       crossorigin="anonymous"
     ></script>
     <link rel="stylesheet" href="css/style.css" />
@@ -54,46 +49,57 @@
         <button class="btn btn-lg btn-primary" id="submit">Search</button>
       </div>
     </div>
+    <div class="row justify-content-center">
+      <div class="col-6">
+        <div class="h1" id="item-totals"></div>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-6">
+        <div class="h2" id="detail-totals"></div>
+      </div>
+    </div>
     <table class="table table-bordered">
       <tbody id="bug-table"></tbody>
     </table>
-    <!-- Button to Open the Modal -->
-    <button
-      type="button"
-      class="btn btn-primary"
-      data-bs-toggle="modal"
-      data-bs-target="#myModal"
-    >
-      Open modal
-    </button>
 
     <!-- The Modal -->
     <div class="modal" id="myModal">
       <div class="modal-dialog justify-content-center">
         <div class="modal-content">
           <!-- Modal Header -->
-          <div class="modal-header">
+          <!-- <div class="modal-header">
             <h4 class="modal-title"></h4>
             <button
               type="button"
               class="btn-close"
               data-bs-dismiss="modal"
             ></button>
-          </div>
+          </div> -->
 
           <!-- Modal body -->
-          <div class="modal-body">
+          <!-- <div class="modal-body">
             <img class="img-responsive" id="modal-image" src="" />
             <ul>
               <li id="location"></li>
+              <li id="months"></li>
               <li id="time"></li>
               <li id="price"></li>
               <li id="rarity"></li>
             </ul>
-          </div>
+          </div> -->
 
           <!-- Modal footer -->
-          <div class="modal-footer">
+          <!-- <div class="modal-footer">
+            <button type="button" id="collect-button" class="btn btn-warning">
+              Collected
+            </button>
+            <button type="button" id="donate-button" class="btn btn-warning">
+              Donate
+            </button>
+            <button type="button" id="clear-button" class="btn btn-danger">
+              Clear
+            </button>
             <button
               type="button"
               class="btn btn-danger"
@@ -101,7 +107,7 @@
             >
               Close
             </button>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
