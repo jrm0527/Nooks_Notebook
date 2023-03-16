@@ -37,6 +37,7 @@ td {
 .detail-box {
   border: 2px solid black;
   background-color: peru;
+  box-shadow: 5px 5px 2px black;
 }
 
 .totals-text {

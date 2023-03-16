@@ -1,3 +1,5 @@
+let chime = new Audio("../sounds/chime.mp3");
+let cancelSnd = new Audio("../sounds/cancel.mp3");
 let selectedType = "";
 let selectedMonth = "all";
 let userDetails = {};
@@ -234,6 +236,7 @@ function collectItem(name) {
     collected: true,
     donated: false,
   };
+  chime.play();
   $("#donate-button").removeClass("d-none");
   $("#collect-button").addClass("btn-success").removeClass("btn-warning");
   localStorage.setItem("collectedObj", JSON.stringify(userDetails));
@@ -252,6 +255,7 @@ function donateItem(name) {
     collected: true,
     donated: true,
   };
+  chime.play();
   $("#donate-button").addClass("btn-success").removeClass("btn-warning");
   localStorage.setItem("collectedObj", JSON.stringify(userDetails));
   donated++;
@@ -282,9 +286,20 @@ function clearItem(name) {
 }
 
 function reset() {
-  console.log("reset");
-  JSON.parse(localStorage.setItem("collectedObj", null));
-  userDetails = {};
+  const affirm = confirm(
+    "Are you sure you want to reset? You will lose all saved data!"
+  );
+  console.log(affirm);
+  if (affirm) {
+    cancelSnd.play();
+    console.log("inside");
+    localStorage.removeItem("collectedObj");
+    userDetails = {};
+    anyChanges = true;
+    $("#item-table").empty();
+    $("#item-box").addClass("d-none");
+    $("#detail-box").addClass("d-none");
+  }
 }
 
 /* ***************** MISC FUNCTIONS ***************/
