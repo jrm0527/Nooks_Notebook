@@ -318,6 +318,7 @@ function countDetails(key) {
 function refreshTotals() {
   $("#item-box").removeClass("d-none");
   $("#detail-box").removeClass("d-none");
+  $("#icon").attr("src", `../images/${selectedType}.png`);
   if (selectedMonth === "all") {
     $("#item-totals").text(
       `TOTAL ${selectedType.toUpperCase()} IN ALL MONTHS: ${totalLength}`
