@@ -1,12 +1,8 @@
 td.collected {
-  background-color: orange !important;
-}
-
-td.donated {
   background-color: yellow !important;
 }
 
-td.both {
+td.donated {
   background-color: lightgreen !important;
 }
 
@@ -29,4 +25,25 @@ td {
 .table-image {
   max-width: 60%;
   max-height: auto;
+}
+
+.header {
+  font-family: "Outfit", sans-serif;
+}
+.detail-box {
+  border: 2px solid black;
+  background-color: peru;
+}
+
+#item-totals {
+  font-family: "Londrina Solid", cursive;
+}
+
+#detail-totals {
+  font-family: "Londrina Solid", cursive;
+}
+
+#button-box {
+  border: 2px solid black;
+  background-color: peru;
 }

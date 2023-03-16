@@ -1,15 +1,10 @@
-const runButton = $("#run");
-const resetButton = $("#reset");
-const bugTable = $("#bug-table");
-const dropdownType = $("#dropdown-type li");
-const dropdownMonth = $("#dropdown-month li");
 let selectedType = "";
 let selectedMonth = "all";
-let rowsInTable = 10;
-let userDetails = {}; //userDetails[itemName].collected = false or userDetails[itemName].donated = false
+let userDetails = {};
 let collected = 0;
 let donated = 0;
 let totalLength = 0;
+let anyChanges = true;
 
 startUp();
 function startUp() {
@@ -18,15 +13,16 @@ function startUp() {
     console.log(userDetails);
   }
 
-  dropdownType.on("click", function () {
+  $("#dropdown-type li").on("click", function () {
     $("#selectedType").text($(this).text());
     selectedType = $(this).text().toLowerCase();
     if (selectedType === "sea creatures") {
       selectedType = "sea";
     }
+    anyChanges = true;
   });
 
-  dropdownMonth.on("click", function () {
+  $("#dropdown-month li").on("click", function () {
     $("#selectedMonth").text($(this).text());
     let month = $("#selectedMonth").text().toLowerCase();
     if (month === "all") {
@@ -34,114 +30,87 @@ function startUp() {
     } else {
       selectedMonth = getMonthNumber($(this).text());
     }
+    anyChanges = true;
   });
 
-  resetButton.on("click", reset);
-  runButton.on("click", search);
-}
-
-function reset() {
-  console.log("reset");
-  JSON.parse(localStorage.setItem("collectedObj", null));
-  userDetails = {};
+  $("#reset").on("click", reset);
+  $("#run").on("click", search);
 }
 
 function search() {
-  $("#selectedType").text("Choose Type");
-  $("#selectedMonth").text("Optional Month");
-  bugTable.empty();
+  if (!anyChanges) {
+    console.log("cancelling");
+    return;
+  }
+  $("#item-table").empty();
   $.get(`https://acnhapi.com/v1/${selectedType}/`, (data) => {
-    totalLength = Object.keys(data).length;
+    totalLength = 0;
+    if (selectedType === "fossils") {
+      selectedMonth = "all";
+    }
+
+    if (selectedMonth !== "all") {
+      for (let key in data) {
+        let monthArray = data[key].availability["month-array-northern"];
+        for (let i = 0; i < monthArray.length; i++) {
+          if (monthArray[i] === selectedMonth) {
+            totalLength++;
+          }
+        }
+      }
+    } else {
+      totalLength = Object.keys(data).length;
+    }
+
+    let rowsInTable = 10;
     if (totalLength % 10 === 0) {
       rowsInTable = 10;
-    } else {
+    } else if (totalLength % 9 === 0) {
       rowsInTable = 9;
+    } else if (totalLength % 8 === 0) {
+      rowsInTable = 8;
+    } else {
+      rowsInTable = 7;
     }
-    createTable(totalLength);
-    // console.log(Object.keys(data).length);
+
+    createTable(rowsInTable);
+
     let count = 0;
-    console.log(data);
     collected = 0;
     donated = 0;
     for (let key in data) {
       if (selectedMonth === "all") {
-        createTd(data[key], count++);
+        createTd(data[key], rowsInTable, count++);
+        countDetails(key);
       } else {
         let monthArray = data[key].availability["month-array-northern"];
         for (let i = 0; i < monthArray.length; i++) {
           if (monthArray[i] === selectedMonth) {
-            createTd(data[key], count++);
+            createTd(data[key], rowsInTable, count++);
+            countDetails(key);
           }
-        }
-      }
-      if (userDetails.hasOwnProperty(key)) {
-        if (userDetails[key].collected) {
-          collected++;
-        }
-        if (userDetails[key].donated) {
-          donated++;
         }
       }
     }
     refreshTotals();
   });
-}
-
-function refreshTotals() {
-  $("#item-totals").text(`TOTAL ${selectedType.toUpperCase()}: ${totalLength}`);
-  $("#detail-totals").text(`COLLECTED: ${collected} / DONATED: ${donated}`);
-}
-
-function createTable(length) {
-  const rows = length / rowsInTable;
-  for (let i = 1; i <= rows; i++) {
-    const tr = $("<tr>").attr("id", `row${i}`);
-    bugTable.append(tr);
-  }
-}
-
-function createTd(item, count) {
-  const row = Math.floor(count / rowsInTable) + 1;
-  const img = $("<img>").addClass("img-fluid table-image");
-  if (selectedType === "fossils") {
-    img.attr("src", item.image_uri);
-  } else {
-    img.attr("src", item.icon_uri);
-  }
-  img
-    .attr("data-bs-toggle", "modal")
-    .attr("data-bs-target", "#myModal")
-    .on("click", function () {
-      setupPopup(item);
-    });
-  const h6 = $("<h6>").text(item.name["name-USen"]);
-  const td = $("<td>").append(h6, img);
-  if (userDetails.hasOwnProperty(item["file-name"])) {
-    let key = userDetails[item["file-name"]];
-    if (key.collected && key.donated) {
-      td.addClass("both");
-    } else if (key.collected) {
-      td.addClass("collected");
-    } else if (key.donated) {
-      td.addClass("donated");
-    }
-  }
-  const tr = $(`#row${row}`).append(td);
-  bugTable.append(tr);
+  anyChanges = false;
 }
 
 function setupPopup(item) {
   $(".modal-content").empty();
-  const title = $("<div>").addClass("modal-title").text(item.name["name-USen"]);
+  const title = $("<h2>")
+    .addClass("modal-title")
+    .text(item.name["name-USen"].toUpperCase());
   const closeBtn = $("<button>")
     .addClass("btn-close")
     .attr("data-bs-dismiss", "modal")
     .on("click", search);
-  const header = $(".modal-header").append(title, closeBtn);
+  const header = $("<div>").addClass("modal-header").append(title, closeBtn);
 
   const img = $("<img>").addClass("img-responsive");
   const liPrice = $("<li>").text(`Price: ${item.price}`);
-  const fullList = $("<ul>");
+  const fullList = $("<ul>").addClass("text-start");
   if (selectedType === "fossils") {
     img.attr("src", item.image_uri);
     fullList.append(liPrice);
@@ -196,6 +165,7 @@ function setupPopup(item) {
       collBtn.addClass("btn btn-success");
     } else {
       collBtn.addClass("btn btn-warning");
+      donBtn.addClass("d-none");
     }
     if (userDetails[item["file-name"]].donated) {
       donBtn.addClass("btn btn-success");
@@ -205,39 +175,71 @@ function setupPopup(item) {
   } else {
     collBtn.addClass("btn btn-warning");
     donBtn.addClass("btn btn-warning");
+    donBtn.addClass("d-none");
   }
   const footer = $("<div>")
     .addClass("modal-footer")
-    .append(collBtn, donBtn, clearBtn, closeBtn2);
+    .append(donBtn, collBtn, clearBtn, closeBtn2);
   $(".modal-content").append(header, body, footer);
 }
+
+/* ***************** TABLE CREATION FUNCTIONS ***************/
+
+function createTable(rowsInTable) {
+  const rows = Math.ceil(totalLength / rowsInTable);
+  console.log(rows);
+  for (let i = 0; i <= rows; i++) {
+    const tr = $("<tr>").attr("id", `row${i}`);
+    $("#item-table").append(tr);
+  }
+}
+
+function createTd(item, rowsInTable, count) {
+  const row = Math.floor(count / rowsInTable) + 1;
+  const img = $("<img>").addClass("img-fluid table-image");
+  if (selectedType === "fossils") {
+    img.attr("src", item.image_uri);
+  } else {
+    img.attr("src", item.icon_uri);
+  }
+  img
+    .attr("data-bs-toggle", "modal")
+    .attr("data-bs-target", "#myModal")
+    .on("click", function () {
+      setupPopup(item);
+    });
+  const h6 = $("<h6>").text(item.name["name-USen"]);
+  const td = $("<td>").append(h6, img);
+  if (userDetails.hasOwnProperty(item["file-name"])) {
+    let key = userDetails[item["file-name"]];
+    if (key.donated) {
+      td.addClass("donated");
+    } else if (key.collected) {
+      td.addClass("collected");
+    }
+  }
+  const tr = $(`#row${row}`).append(td);
+  $("#item-table").append(tr);
+}
+
+/* ***************** BUTTON FUNCTIONS ***************/
 
 function collectItem(name) {
   if (userDetails.hasOwnProperty(name)) {
     if (userDetails[name]["collected"]) {
       return;
     }
-    if (userDetails[name]["donated"]) {
-      userDetails[name] = {
-        collected: true,
-        donated: true,
-      };
-    } else {
-      userDetails[name] = {
-        collected: true,
-        donated: false,
-      };
-    }
-  } else {
-    userDetails[name] = {
-      collected: true,
-      donated: false,
-    };
   }
+  userDetails[name] = {
+    collected: true,
+    donated: false,
+  };
+  $("#donate-button").removeClass("d-none");
   $("#collect-button").addClass("btn-success").removeClass("btn-warning");
   localStorage.setItem("collectedObj", JSON.stringify(userDetails));
   collected++;
   refreshTotals();
+  anyChanges = true;
 }
 
 function donateItem(name) {
@@ -245,27 +247,16 @@ function donateItem(name) {
     if (userDetails[name]["donated"]) {
       return;
     }
-    if (userDetails[name]["collected"]) {
-      userDetails[name] = {
-        collected: true,
-        donated: true,
-      };
-    } else {
-      userDetails[name] = {
-        collected: false,
-        donated: true,
-      };
-    }
-  } else {
-    userDetails[name] = {
-      collected: false,
-      donated: true,
-    };
   }
+  userDetails[name] = {
+    collected: true,
+    donated: true,
+  };
   $("#donate-button").addClass("btn-success").removeClass("btn-warning");
   localStorage.setItem("collectedObj", JSON.stringify(userDetails));
   donated++;
   refreshTotals();
+  anyChanges = true;
 }
 
 function clearItem(name) {
@@ -280,11 +271,48 @@ function clearItem(name) {
       collected: false,
       donated: false,
     };
-    $("#donate-button").addClass("btn-warning").removeClass("btn-success");
+    $("#donate-button")
+      .addClass("btn-warning d-none")
+      .removeClass("btn-success");
     $("#collect-button").addClass("btn-warning").removeClass("btn-success");
     localStorage.setItem("collectedObj", JSON.stringify(userDetails));
     refreshTotals();
+    anyChanges = true;
   }
+}
+
+function reset() {
+  console.log("reset");
+  JSON.parse(localStorage.setItem("collectedObj", null));
+  userDetails = {};
+}
+
+/* ***************** MISC FUNCTIONS ***************/
+
+function countDetails(key) {
+  if (userDetails.hasOwnProperty(key)) {
+    if (userDetails[key].collected) {
+      collected++;
+    }
+    if (userDetails[key].donated) {
+      donated++;
+    }
+  }
+}
+
+function refreshTotals() {
+  if (selectedMonth === "all") {
+    $("#item-totals").text(
+      `TOTAL ${selectedType.toUpperCase()} IN ALL MONTHS: ${totalLength}`
+    );
+  } else {
+    $("#item-totals").text(
+      `TOTAL ${selectedType.toUpperCase()} IN ${getMonthName(
+        selectedMonth
+      ).toUpperCase()}: ${totalLength}`
+    );
+  }
+  $("#detail-totals").text(`COLLECTED: ${collected} / DONATED: ${donated}`);
 }
 
 function getMonthName(num) {
