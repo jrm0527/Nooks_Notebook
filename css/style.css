@@ -1,0 +1,32 @@
+td.collected {
+  background-color: orange !important;
+}
+
+td.donated {
+  background-color: yellow !important;
+}
+
+td.both {
+  background-color: lightgreen !important;
+}
+
+td {
+  background-color: bisque !important;
+  cursor: pointer;
+}
+
+.modal-dialog {
+  position: absolute;
+  left: 50%;
+  top: 30%;
+  transform: translate(-50%, -50%);
+}
+
+.table-bordered {
+  border: 1px solid black;
+}
+
+.table-image {
+  max-width: 60%;
+  max-height: auto;
+}

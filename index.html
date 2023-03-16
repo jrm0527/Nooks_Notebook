@@ -24,13 +24,13 @@
     <link rel="stylesheet" href="css/style.css" />
     <title>Animal Cross: New Horizons</title>
   </head>
-  <body>
+  <body class="bg-info">
     <div id="main">
-      <div id="header">
+      <div class="text-center" id="header">
         <h1>Animal Crossing: New Horizons</h1>
       </div>
     </div>
-    <div class="row justify-content-center">
+    <div class="row text-center">
       <div class="dropdown">
         <button
           class="btn btn-lg btn-primary dropdown-toggle"
@@ -47,68 +47,30 @@
           <li class="dropdown-item-text">Fossils</li>
         </ul>
         <button class="btn btn-lg btn-primary" id="submit">Search</button>
+        <button class="btn btn-lg btn-danger" id="reset">Reset</button>
       </div>
     </div>
-    <div class="row justify-content-center">
-      <div class="col-6">
+    <br />
+    <div class="rowr">
+      <div class="col text-center">
         <div class="h1" id="item-totals"></div>
       </div>
     </div>
-    <div class="row justify-content-center">
-      <div class="col-6">
+    <div class="row">
+      <div class="col text-center">
         <div class="h2" id="detail-totals"></div>
       </div>
     </div>
-    <table class="table table-bordered">
-      <tbody id="bug-table"></tbody>
-    </table>
+    <div class="container">
+      <table class="table table-bordered table-responsive">
+        <tbody class="text-center" id="bug-table"></tbody>
+      </table>
+    </div>
 
     <!-- The Modal -->
     <div class="modal" id="myModal">
-      <div class="modal-dialog justify-content-center">
-        <div class="modal-content">
-          <!-- Modal Header -->
-          <!-- <div class="modal-header">
-            <h4 class="modal-title"></h4>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-            ></button>
-          </div> -->
-
-          <!-- Modal body -->
-          <!-- <div class="modal-body">
-            <img class="img-responsive" id="modal-image" src="" />
-            <ul>
-              <li id="location"></li>
-              <li id="months"></li>
-              <li id="time"></li>
-              <li id="price"></li>
-              <li id="rarity"></li>
-            </ul>
-          </div> -->
-
-          <!-- Modal footer -->
-          <!-- <div class="modal-footer">
-            <button type="button" id="collect-button" class="btn btn-warning">
-              Collected
-            </button>
-            <button type="button" id="donate-button" class="btn btn-warning">
-              Donate
-            </button>
-            <button type="button" id="clear-button" class="btn btn-danger">
-              Clear
-            </button>
-            <button
-              type="button"
-              class="btn btn-danger"
-              data-bs-dismiss="modal"
-            >
-              Close
-            </button>
-          </div> -->
-        </div>
+      <div class="modal-dialog">
+        <div class="modal-content"></div>
       </div>
     </div>
   </body>

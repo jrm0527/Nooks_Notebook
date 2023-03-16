@@ -1,4 +1,5 @@
 const submitButton = $("#submit");
+const resetButton = $("#reset");
 const input = $("input");
 const resultContainer = $("#results");
 const bugTable = $("#bug-table");
@@ -13,22 +14,27 @@ let totalLength = 0;
 startUp();
 function startUp() {
   if (JSON.parse(localStorage.getItem("collectedObj"))) {
-    // JSON.parse(localStorage.setItem("collectedObj", null));
     userDetails = JSON.parse(localStorage.getItem("collectedObj"));
     console.log(userDetails);
   }
+
+  dropdown.on("click", function () {
+    $("#selected").text($(this).text());
+    selected = $(this).text().toLowerCase();
+    if (selected === "sea creatures") {
+      selected = "sea";
+    }
+  });
+
+  resetButton.on("click", reset);
+  submitButton.on("click", search);
 }
 
-dropdown.on("click", function () {
-  $("#selected").text($(this).text());
-  selected = $(this).text().toLowerCase();
-  if (selected === "sea creatures") {
-    selected = "sea";
-  }
-});
-
-//Setup button/input interactions
-submitButton.on("click", search);
+function reset() {
+  console.log("reset");
+  JSON.parse(localStorage.setItem("collectedObj", null));
+  userDetails = {};
+}
 
 function search() {
   bugTable.empty();
@@ -73,10 +79,9 @@ function createTable(length) {
   }
 }
 
-function createTd(data, count) {
-  let item = data;
+function createTd(item, count) {
   const row = Math.floor(count / rowsInTable) + 1;
-  const img = $("<img>");
+  const img = $("<img>").addClass("img-fluid table-image");
   if (selected === "fossils") {
     img.attr("src", item.image_uri);
   } else {
@@ -90,6 +95,16 @@ function createTd(data, count) {
     });
   const h6 = $("<h6>").text(item.name["name-USen"]);
   const td = $("<td>").append(h6, img);
+  if (userDetails.hasOwnProperty(item["file-name"])) {
+    let key = userDetails[item["file-name"]];
+    if (key.collected && key.donated) {
+      td.addClass("both");
+    } else if (key.collected) {
+      td.addClass("collected");
+    } else if (key.donated) {
+      td.addClass("donated");
+    }
+  }
   const tr = $(`#row${row}`).append(td);
   bugTable.append(tr);
 }
@@ -99,7 +114,8 @@ function setupPopup(item) {
   const title = $("<div>").addClass("modal-title").text(item.name["name-USen"]);
   const closeBtn = $("<button>")
     .addClass("btn-close")
-    .attr("data-bs-dismiss", "modal");
+    .attr("data-bs-dismiss", "modal")
+    .on("click", search);
   const header = $(".modal-header").append(title, closeBtn);
 
   const img = $("<img>").addClass("img-responsive");
@@ -151,7 +167,8 @@ function setupPopup(item) {
   const closeBtn2 = $("<button>")
     .addClass("btn btn-danger")
     .attr("data-bs-dismiss", "modal")
-    .text("Close");
+    .text("Close")
+    .on("click", search);
 
   if (userDetails.hasOwnProperty(item["file-name"])) {
     if (userDetails[item["file-name"]].collected) {
@@ -176,26 +193,26 @@ function setupPopup(item) {
 
 function collectItem(name) {
   if (userDetails.hasOwnProperty(name)) {
-    console.log("has prop");
     if (userDetails[name]["collected"]) {
-      console.log("collectedd");
       return;
-    } else if (userDetails[name].hasOwnProperty("donated")) {
-      console.log("has donated prop");
-      if (userDetails[name]["donated"]) {
-        console.log("donated");
-        userDetails[name] = {
-          collected: true,
-          donated: true,
-        };
-      }
     }
+    if (userDetails[name]["donated"]) {
+      userDetails[name] = {
+        collected: true,
+        donated: true,
+      };
+    } else {
+      userDetails[name] = {
+        collected: true,
+        donated: false,
+      };
+    }
+  } else {
+    userDetails[name] = {
+      collected: true,
+      donated: false,
+    };
   }
-  userDetails[name] = {
-    collected: true,
-    donated: false,
-  };
-  console.log(userDetails);
   $("#collect-button").addClass("btn-success").removeClass("btn-warning");
   localStorage.setItem("collectedObj", JSON.stringify(userDetails));
   collected++;
@@ -206,13 +223,12 @@ function donateItem(name) {
   if (userDetails.hasOwnProperty(name)) {
     if (userDetails[name]["donated"]) {
       return;
-    } else if (userDetails[name].hasOwnProperty("collected")) {
-      if (userDetails[name]["collected"]) {
-        userDetails[name] = {
-          collected: true,
-          donated: true,
-        };
-      }
+    }
+    if (userDetails[name]["collected"]) {
+      userDetails[name] = {
+        collected: true,
+        donated: true,
+      };
     } else {
       userDetails[name] = {
         collected: false,
