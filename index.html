@@ -38,15 +38,46 @@
           id="dropdownMenu"
           data-bs-toggle="dropdown"
         >
-          <span id="selected">Choose option</span>
+          <span id="selectedType">Choose Type</span>
         </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
+        <ul
+          class="dropdown-menu"
+          id="dropdown-type"
+          aria-labelledby="dropdownMenu"
+        >
           <li class="dropdown-item-text">Fish</li>
           <li class="dropdown-item-text">Sea Creatures</li>
           <li class="dropdown-item-text">Bugs</li>
           <li class="dropdown-item-text">Fossils</li>
         </ul>
-        <button class="btn btn-lg btn-primary" id="submit">Search</button>
+        <button
+          class="btn btn-lg btn-primary dropdown-toggle"
+          type="button"
+          id="dropdownMonth"
+          data-bs-toggle="dropdown"
+        >
+          <span id="selectedMonth">Optional Month</span>
+        </button>
+        <ul
+          class="dropdown-menu"
+          id="dropdown-month"
+          aria-labelledby="dropdownMonth"
+        >
+          <li class="dropdown-item-text">All</li>
+          <li class="dropdown-item-text">January</li>
+          <li class="dropdown-item-text">February</li>
+          <li class="dropdown-item-text">March</li>
+          <li class="dropdown-item-text">April</li>
+          <li class="dropdown-item-text">May</li>
+          <li class="dropdown-item-text">June</li>
+          <li class="dropdown-item-text">July</li>
+          <li class="dropdown-item-text">August</li>
+          <li class="dropdown-item-text">September</li>
+          <li class="dropdown-item-text">October</li>
+          <li class="dropdown-item-text">November</li>
+          <li class="dropdown-item-text">December</li>
+        </ul>
+        <button class="btn btn-lg btn-primary" id="run">Run</button>
         <button class="btn btn-lg btn-danger" id="reset">Reset</button>
       </div>
     </div>

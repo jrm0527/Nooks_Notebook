@@ -1,10 +1,10 @@
-const submitButton = $("#submit");
+const runButton = $("#run");
 const resetButton = $("#reset");
-const input = $("input");
-const resultContainer = $("#results");
 const bugTable = $("#bug-table");
-const dropdown = $(".dropdown-menu li");
-let selected = "";
+const dropdownType = $("#dropdown-type li");
+const dropdownMonth = $("#dropdown-month li");
+let selectedType = "";
+let selectedMonth = "all";
 let rowsInTable = 10;
 let userDetails = {}; //userDetails[itemName].collected = false or userDetails[itemName].donated = false
 let collected = 0;
@@ -18,16 +18,26 @@ function startUp() {
     console.log(userDetails);
   }
 
-  dropdown.on("click", function () {
-    $("#selected").text($(this).text());
-    selected = $(this).text().toLowerCase();
-    if (selected === "sea creatures") {
-      selected = "sea";
+  dropdownType.on("click", function () {
+    $("#selectedType").text($(this).text());
+    selectedType = $(this).text().toLowerCase();
+    if (selectedType === "sea creatures") {
+      selectedType = "sea";
+    }
+  });
+
+  dropdownMonth.on("click", function () {
+    $("#selectedMonth").text($(this).text());
+    let month = $("#selectedMonth").text().toLowerCase();
+    if (month === "all") {
+      selectedMonth = "all";
+    } else {
+      selectedMonth = getMonthNumber($(this).text());
     }
   });
 
   resetButton.on("click", reset);
-  submitButton.on("click", search);
+  runButton.on("click", search);
 }
 
 function reset() {
@@ -37,8 +47,10 @@ function reset() {
 }
 
 function search() {
+  $("#selectedType").text("Choose Type");
+  $("#selectedMonth").text("Optional Month");
   bugTable.empty();
-  $.get(`https://acnhapi.com/v1/${selected}/`, (data) => {
+  $.get(`https://acnhapi.com/v1/${selectedType}/`, (data) => {
     totalLength = Object.keys(data).length;
     if (totalLength % 10 === 0) {
       rowsInTable = 10;
@@ -52,7 +64,16 @@ function search() {
     collected = 0;
     donated = 0;
     for (let key in data) {
-      createTd(data[key], count++);
+      if (selectedMonth === "all") {
+        createTd(data[key], count++);
+      } else {
+        let monthArray = data[key].availability["month-array-northern"];
+        for (let i = 0; i < monthArray.length; i++) {
+          if (monthArray[i] === selectedMonth) {
+            createTd(data[key], count++);
+          }
+        }
+      }
       if (userDetails.hasOwnProperty(key)) {
         if (userDetails[key].collected) {
           collected++;
@@ -67,7 +88,7 @@ function search() {
 }
 
 function refreshTotals() {
-  $("#item-totals").text(`TOTAL ${selected.toUpperCase()}: ${totalLength}`);
+  $("#item-totals").text(`TOTAL ${selectedType.toUpperCase()}: ${totalLength}`);
   $("#detail-totals").text(`COLLECTED: ${collected} / DONATED: ${donated}`);
 }
 
@@ -82,7 +103,7 @@ function createTable(length) {
 function createTd(item, count) {
   const row = Math.floor(count / rowsInTable) + 1;
   const img = $("<img>").addClass("img-fluid table-image");
-  if (selected === "fossils") {
+  if (selectedType === "fossils") {
     img.attr("src", item.image_uri);
   } else {
     img.attr("src", item.icon_uri);
@@ -121,7 +142,7 @@ function setupPopup(item) {
   const img = $("<img>").addClass("img-responsive");
   const liPrice = $("<li>").text(`Price: ${item.price}`);
   const fullList = $("<ul>");
-  if (selected === "fossils") {
+  if (selectedType === "fossils") {
     img.attr("src", item.image_uri);
     fullList.append(liPrice);
   } else {
@@ -282,4 +303,11 @@ function getMonthName(num) {
     "December",
   ];
   return monthNames[num - 1];
+}
+
+function getMonthNumber(month) {
+  var d = Date.parse(month + "1, 2012");
+  if (!isNaN(d)) {
+    return new Date(d).getMonth() + 1;
+  }
 }
