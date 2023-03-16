@@ -18,6 +18,10 @@ td {
   transform: translate(-50%, -50%);
 }
 
+.table {
+  box-shadow: 5px 5px 2px black;
+}
+
 .table-bordered {
   border: 1px solid black;
 }
@@ -35,11 +39,7 @@ td {
   background-color: peru;
 }
 
-#item-totals {
-  font-family: "Londrina Solid", cursive;
-}
-
-#detail-totals {
+.totals-text {
   font-family: "Londrina Solid", cursive;
 }
 
