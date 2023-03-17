@@ -57,12 +57,12 @@ li {
   transform: translate(150%);
 }
 
-#icon {
+#critter-icon {
   opacity: 1;
   transition: opacity 600ms ease-in;
 }
 
-#icon.not-visible {
+#critter-icon.not-visible {
   opacity: 0;
   transition: opacity 600ms ease-out;
 }

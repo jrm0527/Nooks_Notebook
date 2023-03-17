@@ -44,10 +44,7 @@ function delay(time) {
 }
 
 async function resetAnim() {
-  $("#item-box").addClass("not-loaded");
-  $("#detail-box").addClass("not-loaded");
-  $("#icon").addClass("not-visible");
-  $("#table-container").addClass("not-visible");
+  hideElements();
   if (!firstLoad) {
     await delay(600);
   } else {
@@ -310,10 +307,7 @@ function reset() {
     userDetails = {};
     anyChanges = true;
     $("#item-table").empty();
-    $("#item-box").addClass("not-loaded");
-    $("#detail-box").addClass("not-loaded");
-    $("#icon").addClass("not-visible");
-    $("#table-container").addClass("not-visible");
+    hideElements();
   }
 }
 
@@ -333,9 +327,12 @@ function countDetails(key) {
 function refreshTotals() {
   $("#item-box").removeClass("not-loaded");
   $("#detail-box").removeClass("not-loaded");
-  $("#icon").removeClass("not-visible");
+  $("#critter-icon").removeClass("not-visible");
   $("#table-container").removeClass("not-visible");
-  $("#icon").attr("src", `/frontend-project/images/${selectedType}.png`);
+  $("#critter-icon").attr(
+    "src",
+    `/frontend-project/images/${selectedType}.png`
+  );
   if (selectedMonth === "all") {
     $("#item-totals").text(
       `TOTAL ${selectedType.toUpperCase()} IN ALL MONTHS: ${totalLength}`
@@ -348,6 +345,13 @@ function refreshTotals() {
     );
   }
   $("#detail-totals").text(`COLLECTED: ${collected} / DONATED: ${donated}`);
+}
+
+function hideElements() {
+  $("#item-box").addClass("not-loaded");
+  $("#detail-box").addClass("not-loaded");
+  $("#critter-icon").addClass("not-visible");
+  $("#table-container").addClass("not-visible");
 }
 
 function getMonthName(num) {
