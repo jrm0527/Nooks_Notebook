@@ -1,5 +1,5 @@
-let chime = new Audio("/frontend-project/sounds/chime.mp3");
-let cancelSnd = new Audio("/frontend-project/sounds/cancel.mp3");
+let chime = new Audio("sounds/chime.mp3");
+let cancelSnd = new Audio("sounds/cancel.mp3");
 let selectedType = "";
 let selectedMonth = "all";
 let userDetails = {};
@@ -329,10 +329,7 @@ function refreshTotals() {
   $("#detail-box").removeClass("not-loaded");
   $("#critter-icon").removeClass("not-visible");
   $("#table-container").removeClass("not-visible");
-  $("#critter-icon").attr(
-    "src",
-    `/frontend-project/images/${selectedType}.png`
-  );
+  $("#critter-icon").attr("src", `images/${selectedType}.png`);
   if (selectedMonth === "all") {
     $("#item-totals").text(
       `TOTAL ${selectedType.toUpperCase()} IN ALL MONTHS: ${totalLength}`
