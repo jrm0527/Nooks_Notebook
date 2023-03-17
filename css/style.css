@@ -38,6 +38,35 @@ td {
   border: 2px solid black;
   background-color: peru;
   box-shadow: 5px 5px 2px black;
+  transition-duration: 600ms;
+}
+
+#item-box.not-loaded {
+  transform: translate(-150%);
+}
+
+#detail-box.not-loaded {
+  transform: translate(150%);
+}
+
+#icon {
+  opacity: 1;
+  transition: opacity 600ms ease-in;
+}
+
+#icon.not-visible {
+  opacity: 0;
+  transition: opacity 600ms ease-out;
+}
+
+#table-container {
+  opacity: 1;
+  transition: opacity 1000ms ease-in;
+}
+
+#table-container.not-visible {
+  opacity: 0;
+  transition: opacity 600ms ease-out;
 }
 
 .totals-text {

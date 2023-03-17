@@ -7,6 +7,7 @@ let collected = 0;
 let donated = 0;
 let totalLength = 0;
 let anyChanges = true;
+let firstLoad = true;
 
 startUp();
 function startUp() {
@@ -36,7 +37,24 @@ function startUp() {
   });
 
   $("#reset").on("click", reset);
-  $("#run").on("click", search);
+  $("#run").on("click", resetAnim);
+}
+
+function delay(time) {
+  return new Promise((resolve) => setTimeout(resolve, time));
+}
+
+async function resetAnim() {
+  $("#item-box").addClass("not-loaded");
+  $("#detail-box").addClass("not-loaded");
+  $("#icon").addClass("not-visible");
+  $("#table-container").addClass("not-visible");
+  if (!firstLoad) {
+    await delay(600);
+  } else {
+    firstLoad = false;
+  }
+  search();
 }
 
 function search() {
@@ -316,8 +334,10 @@ function countDetails(key) {
 }
 
 function refreshTotals() {
-  $("#item-box").removeClass("d-none");
-  $("#detail-box").removeClass("d-none");
+  $("#item-box").removeClass("not-loaded");
+  $("#detail-box").removeClass("not-loaded");
+  $("#icon").removeClass("not-visible");
+  $("#table-container").removeClass("not-visible");
   $("#icon").attr("src", `../images/${selectedType}.png`);
   if (selectedMonth === "all") {
     $("#item-totals").text(
