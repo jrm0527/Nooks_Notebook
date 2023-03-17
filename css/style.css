@@ -13,9 +13,17 @@ td {
 
 .modal-dialog {
   position: absolute;
-  left: 50%;
+  left: 40%;
   top: 30%;
-  transform: translate(-50%, -50%);
+}
+
+.modal-content {
+  font-family: "Londrina Solid", cursive;
+  background-color: lightgray;
+}
+
+li {
+  font-size: large;
 }
 
 .table {
