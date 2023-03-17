@@ -307,7 +307,6 @@ function reset() {
   const affirm = confirm(
     "Are you sure you want to reset? You will lose all saved data!"
   );
-  console.log(affirm);
   if (affirm) {
     cancelSnd.play();
     console.log("inside");
@@ -315,8 +314,12 @@ function reset() {
     userDetails = {};
     anyChanges = true;
     $("#item-table").empty();
-    $("#item-box").addClass("d-none");
-    $("#detail-box").addClass("d-none");
+    // $("#item-box").addClass("d-none");
+    // $("#detail-box").addClass("d-none");
+    $("#item-box").addClass("not-loaded");
+    $("#detail-box").addClass("not-loaded");
+    $("#icon").addClass("not-visible");
+    $("#table-container").addClass("not-visible");
   }
 }
 
