@@ -13,7 +13,6 @@ startUp();
 function startUp() {
   if (JSON.parse(localStorage.getItem("collectedObj"))) {
     userDetails = JSON.parse(localStorage.getItem("collectedObj"));
-    console.log(userDetails);
   }
 
   $("#dropdown-type li").on("click", function () {
@@ -59,7 +58,6 @@ async function resetAnim() {
 
 function search() {
   if (!anyChanges) {
-    console.log("cancelling");
     return;
   }
   $("#item-table").empty();
@@ -207,7 +205,6 @@ function setupPopup(item) {
 
 function createTable(rowsInTable) {
   const rows = Math.ceil(totalLength / rowsInTable);
-  console.log(rows);
   for (let i = 0; i <= rows; i++) {
     const tr = $("<tr>").attr("id", `row${i}`);
     $("#item-table").append(tr);
@@ -309,13 +306,10 @@ function reset() {
   );
   if (affirm) {
     cancelSnd.play();
-    console.log("inside");
     localStorage.removeItem("collectedObj");
     userDetails = {};
     anyChanges = true;
     $("#item-table").empty();
-    // $("#item-box").addClass("d-none");
-    // $("#detail-box").addClass("d-none");
     $("#item-box").addClass("not-loaded");
     $("#detail-box").addClass("not-loaded");
     $("#icon").addClass("not-visible");
